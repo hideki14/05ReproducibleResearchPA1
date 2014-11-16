@@ -220,7 +220,7 @@ df &lt;- read.csv(&quot;./activity.csv&quot;,  header = TRUE)
 <li>Make a histogram of the total number of steps taken each day.</li>
 </ol>
 
-<p>I used complete cases only for this part. I then calculated total number of steps taken each day with the following code.</p>
+<p>I used  only complete cases for this part. I then calculated total number of steps taken each day with the following code.</p>
 
 <pre><code class="r">daily.sum &lt;- df %&gt;%
         filter(complete.cases(df)) %&gt;%
@@ -240,7 +240,7 @@ head(daily.sum)
 ## 6 2012-10-07             11015
 </code></pre>
 
-<p>As, we can see, the dataframme &ldquo;daily.sum&rdquo; has column &ldquo;date&rdquo; and &ldquo;daily.total.steps.&rdquo;
+<p>As, we can see, the dataframe &ldquo;daily.sum&rdquo; has column &ldquo;date&rdquo; and &ldquo;daily.total.steps.&rdquo;
 I then plotted the histogram of the &ldquo;daily.total.steps.&rdquo;</p>
 
 <pre><code class="r">g &lt;- ggplot(daily.sum, aes(x = daily.total.steps)) +
@@ -256,7 +256,7 @@ print(g)
 <li>Calculate and report the mean and median total number of steps taken per day</li>
 </ol>
 
-<p>The mean and median was calculated with the code down below.</p>
+<p>The mean and median was calculated with the code below.</p>
 
 <pre><code class="r">summarize(daily.sum, daily.step.mean = mean(daily.total.steps, na.rm = TRUE),
           daily.step.median = median(daily.total.steps))
@@ -268,11 +268,9 @@ print(g)
 ## 1           10766             10765
 </code></pre>
 
-<pre><code class="r">mean.median &lt;- summarize(daily.sum, daily.step.mean = mean(daily.total.steps, na.rm = TRUE),
-          daily.step.median = median(daily.total.steps))
-</code></pre>
-
-<p>As we can see, the mean was 1.0766 &times; 10<sup>4</sup> and median was 10765.</p>
+<p>As we can see, the mean was 10766
+          and median was
+10765.</p>
 
 <h3>III. What is the daily activity pattern?</h3>
 
@@ -315,7 +313,7 @@ print (g2)
 <li>Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?</li>
 </ol>
 
-<p>From the following result, we can see the maximum number 206.1698 was recorded at the interval 835 (08:35).</p>
+<p>From the following result, we can see the maximum number 206.2 was recorded at the interval 835 (08:35).</p>
 
 <pre><code class="r">interval.mean[which.max(interval.mean$mean.steps), &quot;interval&quot;]
 </code></pre>
@@ -353,7 +351,7 @@ print (g2)
 <li>Create a new dataset that is equal to the original dataset but with the missing data filled in.</li>
 </ol>
 
-<p>Now, the dataframe has three columns.</p>
+<p>Now, the original dataframe has three columns.</p>
 
 <pre><code class="r">head(df)
 </code></pre>
@@ -367,9 +365,9 @@ print (g2)
 ## 6    NA 2012-10-01       25
 </code></pre>
 
-<p>I then joined the &ldquo;df&rdquo; and &ldquo;interval.mean.&rdquo;</p>
+<p>I then joined the &ldquo;df&rdquo; and &ldquo;interval.mean&rdquo; with the key &ldquo;interval.&rdquo; We see that new column &ldquo;mean.steps&rdquo; was added.</p>
 
-<pre><code class="r">## join the df and interval.mean data with the key &quot;interavl&quot;
+<pre><code class="r">## join df and interval.mean data with the key &quot;interavl&quot;
 df &lt;- left_join(df, interval.mean, by = &quot;interval&quot;)
 head(df)
 </code></pre>
@@ -383,7 +381,7 @@ head(df)
 ## 6    NA 2012-10-01       25    2.09434
 </code></pre>
 
-<p>We see that new column &ldquo;mean.steps&rdquo; was added.</p>
+<p>Missing values were imputed by the following code.</p>
 
 <pre><code class="r">## impute the missing values with the values in mean.steps column
 df$steps &lt;- ifelse(is.na(df$steps), df$mean.steps, df$steps)
@@ -401,14 +399,14 @@ head(df)
 
 <p>We can confirm that the NA&#39;s in &ldquo;steps&rdquo; were imputed by &ldquo;mean.steps.&rdquo;</p>
 
-<p>The column &ldquo;mean.steps&rdquo; was no more necessary and was deleted for tidyness. </p>
+<p>The column &ldquo;mean.steps&rdquo; was no more necessary and was deleted for tidy. </p>
 
 <pre><code class="r">## Delete mean.step for tidy.
 df &lt;- df[, -4]
 </code></pre>
 
 <ol>
-<li>Make a histogram of the total number of steps taken each day and Calculate and report the mean and median total number of steps taken per day. Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?</li>
+<li>Make a histogram of the total number of steps taken each day and calculate and report the mean and median total number of steps taken per day. Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?</li>
 </ol>
 
 <p>I calculated total number of steps taken each day in the same way as Part II. 1. This time I used imputed steps.</p>
@@ -453,15 +451,11 @@ print(g3)
 ## 1           10766             10766
 </code></pre>
 
-<pre><code class="r">new.mean.median &lt;- summarize(daily.imputed.sum, daily.step.mean = mean(daily.total.steps, na.rm = TRUE),
-          daily.step.median = median(daily.total.steps))
-</code></pre>
+<p>The new mean was 10766 and the new median was 10766. These figures were almost the same as the ones obtained with the data before imputation in Part II. 2.</p>
 
-<p>The new mean was 1.0766 &times; 10<sup>4</sup> and the new median was 1.0766 &times; 10<sup>4</sup>. These were almost the same as the ones obtained with the data before imputation in Part II. 2.</p>
+<p>The comparison of the two histograms shows the significant difference in the peaks. The histogram with imputation shows almost twice as many concentration of counts at the mean step value in x-axis. </p>
 
-<p>The comparison of the two histograms shows the significant difference in the peak of the graph. The histogram with imputation shows almost twice as many concentration of counts at the mean step numbers in x-axis. </p>
-
-<p>We can consider that the stability of the mean and median, and the concentration of counts at the mean steps in x-axis were caused by the value of imputation: I used the mean of the number of steps in each interval.</p>
+<p>I consider that the stability of the mean and median, and the concentration of counts were caused by the value of imputation: I used the mean number of the steps in each interval.</p>
 
 <h3>V. Are there differences in activity patterns between weekdays and weekends?</h3>
 
@@ -469,7 +463,7 @@ print(g3)
 <li>Create a new factor variable in the dataset with two levels &ndash; &ldquo;weekday&rdquo; and &ldquo;weekend&rdquo; indicating whether a given date is a weekday or weekend day.</li>
 </ol>
 
-<p>I converted &ldquo;date&rdquo; column into Date class and added &ldquo;day.of.the.week&rdquo; column week with weekday(). Then I added new column &ldquo;day.type&rdquo; that contain &ldquo;weekend&rdquo; and &ldquo;weekday.&rdquo;</p>
+<p>I converted &ldquo;date&rdquo; column into Date class and added &ldquo;day.of.the.week&rdquo; column with weekday(). Then I added new column &ldquo;day.type&rdquo; that contain &ldquo;weekend&rdquo; and &ldquo;weekday.&rdquo;</p>
 
 <pre><code class="r">df &lt;- mutate(df, date=as.Date(date))
 df &lt;- mutate(df, day.of.the.week = weekdays(df$date))

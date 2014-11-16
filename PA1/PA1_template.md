@@ -19,7 +19,7 @@ df <- read.csv("./activity.csv",  header = TRUE)
 
 1. Make a histogram of the total number of steps taken each day.
 
-I used complete cases only for this part. I then calculated total number of steps taken each day with the following code.
+I used  only complete cases for this part. I then calculated total number of steps taken each day with the following code.
 
 
 ```r
@@ -42,7 +42,7 @@ head(daily.sum)
 ## 6 2012-10-07             11015
 ```
 
-As, we can see, the dataframme "daily.sum" has column "date" and "daily.total.steps."
+As, we can see, the dataframe "daily.sum" has column "date" and "daily.total.steps."
 I then plotted the histogram of the "daily.total.steps."
 
 
@@ -58,7 +58,7 @@ print(g)
 
 2. Calculate and report the mean and median total number of steps taken per day
 
-The mean and median was calculated with the code down below.
+The mean and median was calculated with the code below.
 
 ```r
 summarize(daily.sum, daily.step.mean = mean(daily.total.steps, na.rm = TRUE),
@@ -71,12 +71,9 @@ summarize(daily.sum, daily.step.mean = mean(daily.total.steps, na.rm = TRUE),
 ##   daily.step.mean daily.step.median
 ## 1           10766             10765
 ```
-
-```r
-mean.median <- summarize(daily.sum, daily.step.mean = mean(daily.total.steps, na.rm = TRUE),
-          daily.step.median = median(daily.total.steps))
-```
-As we can see, the mean was 1.0766 &times; 10<sup>4</sup> and median was 10765.
+As we can see, the mean was 10766
+          and median was
+10765.
 
 
 ### III. What is the daily activity pattern?
@@ -119,7 +116,7 @@ print (g2)
 
 2. Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
 
-From the following result, we can see the maximum number 206.1698 was recorded at the interval 835 (08:35).
+From the following result, we can see the maximum number 206.2 was recorded at the interval 835 (08:35).
 
 ```r
 interval.mean[which.max(interval.mean$mean.steps), "interval"]
@@ -156,7 +153,7 @@ I imputed the mean number of steps of each 5-minute interval. This was calculate
 
 3. Create a new dataset that is equal to the original dataset but with the missing data filled in.
 
-Now, the dataframe has three columns.
+Now, the original dataframe has three columns.
 
 ```r
 head(df)
@@ -171,10 +168,10 @@ head(df)
 ## 5    NA 2012-10-01       20
 ## 6    NA 2012-10-01       25
 ```
-I then joined the "df" and "interval.mean."
+I then joined the "df" and "interval.mean" with the key "interval." We see that new column "mean.steps" was added.
 
 ```r
-## join the df and interval.mean data with the key "interavl"
+## join df and interval.mean data with the key "interavl"
 df <- left_join(df, interval.mean, by = "interval")
 head(df)
 ```
@@ -189,7 +186,7 @@ head(df)
 ## 6    NA 2012-10-01       25    2.09434
 ```
 
-We see that new column "mean.steps" was added.
+Missing values were imputed by the following code.
 
 
 ```r
@@ -210,14 +207,14 @@ head(df)
 
 We can confirm that the NA's in "steps" were imputed by "mean.steps."
 
-The column "mean.steps" was no more necessary and was deleted for tidyness. 
+The column "mean.steps" was no more necessary and was deleted for tidy. 
 
 ```r
 ## Delete mean.step for tidy.
 df <- df[, -4]
 ```
 
-4. Make a histogram of the total number of steps taken each day and Calculate and report the mean and median total number of steps taken per day. Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?
+4. Make a histogram of the total number of steps taken each day and calculate and report the mean and median total number of steps taken per day. Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?
 
 I calculated total number of steps taken each day in the same way as Part II. 1. This time I used imputed steps.
 
@@ -267,21 +264,16 @@ summarize(daily.imputed.sum, daily.step.mean = mean(daily.total.steps, na.rm = T
 ##   daily.step.mean daily.step.median
 ## 1           10766             10766
 ```
+The new mean was 10766 and the new median was 10766. These figures were almost the same as the ones obtained with the data before imputation in Part II. 2.
 
-```r
-new.mean.median <- summarize(daily.imputed.sum, daily.step.mean = mean(daily.total.steps, na.rm = TRUE),
-          daily.step.median = median(daily.total.steps))
-```
-The new mean was 1.0766 &times; 10<sup>4</sup> and the new median was 1.0766 &times; 10<sup>4</sup>. These were almost the same as the ones obtained with the data before imputation in Part II. 2.
+The comparison of the two histograms shows the significant difference in the peaks. The histogram with imputation shows almost twice as many concentration of counts at the mean step value in x-axis. 
 
-The comparison of the two histograms shows the significant difference in the peak of the graph. The histogram with imputation shows almost twice as many concentration of counts at the mean step numbers in x-axis. 
-
-We can consider that the stability of the mean and median, and the concentration of counts at the mean steps in x-axis were caused by the value of imputation: I used the mean of the number of steps in each interval.
+I consider that the stability of the mean and median, and the concentration of counts were caused by the value of imputation: I used the mean number of the steps in each interval.
 
 ### V. Are there differences in activity patterns between weekdays and weekends?
 1. Create a new factor variable in the dataset with two levels -- "weekday" and "weekend" indicating whether a given date is a weekday or weekend day.
 
-I converted "date" column into Date class and added "day.of.the.week" column week with weekday(). Then I added new column "day.type" that contain "weekend" and "weekday."
+I converted "date" column into Date class and added "day.of.the.week" column with weekday(). Then I added new column "day.type" that contain "weekend" and "weekday."
 
 ```r
 df <- mutate(df, date=as.Date(date))
